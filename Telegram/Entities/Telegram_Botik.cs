@@ -9,11 +9,11 @@ namespace Telegram;
 public class Telegram_Botik
 {
     public string StartTime { get; init; }
-    public string Name { get; init;}
+    public string? Name { get; init;}
     ReceiverOptions receiverOptions;
     public CancellationTokenSource cts;
 
-    Task<Bot.Types.User> me;
+    User me;
 
     TelegramBotClient botClient;
 
@@ -21,7 +21,8 @@ public class Telegram_Botik
     {
         botClient = new TelegramBotClient(token);
         StartTime = DateTime.Now.ToString();
-        me =  botClient.GetMeAsync();
+        me = botClient.GetMeAsync().Result;
+        Name = me.Username;
         
 
         cts = new();
@@ -60,7 +61,7 @@ public class Telegram_Botik
 
         Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
 
-        // Echo received message text
+        
         Message sentMessage = await botClient.SendTextMessageAsync(
             chatId: chatId,
             text: "You said:\n" + messageText,
