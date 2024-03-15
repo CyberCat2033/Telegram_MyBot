@@ -8,15 +8,17 @@ namespace Telegram;
 
 public class Telegram_Botik
 {
+    #region Properties and fields 
     public string StartTime { get; init; }
-    public string? Name { get; init;}
-    ReceiverOptions receiverOptions;
+    public string? Name { get; init; }
     public CancellationTokenSource cts;
+    public User me { get; init; }
 
-    User me;
+    private ReceiverOptions receiverOptions { get; init; }
+    private TelegramBotClient botClient;
+    #endregion
 
-    TelegramBotClient botClient;
-
+    #region Constructor
     public Telegram_Botik(string token)
     {
         botClient = new TelegramBotClient(token);
@@ -33,17 +35,15 @@ public class Telegram_Botik
         };
 
     }
-    async public Task Start()
+    #endregion
+
+    #region Private Methods
+    private void start_notification()
     {
-        botClient.StartReceiving
-            (
-     updateHandler: HandleUpdateAsync,
-     pollingErrorHandler: HandlePollingErrorAsync,
-     receiverOptions: receiverOptions,
-     cancellationToken: cts.Token
-            );
-
-
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Start listening in {StartTime}");
+        Console.ResetColor();
     }
 
     private async Task HandlePollingErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken token)
@@ -67,4 +67,20 @@ public class Telegram_Botik
             text: "You said:\n" + messageText,
             cancellationToken: token);
     }
+    #endregion
+
+    #region Public Methods
+    public async Task Start()
+    {
+        start_notification();
+        botClient.StartReceiving
+            (
+            updateHandler: HandleUpdateAsync,
+            pollingErrorHandler: HandlePollingErrorAsync,
+            receiverOptions: receiverOptions,
+            cancellationToken: cts.Token
+            );
+    }
+    #endregion
+
 }
