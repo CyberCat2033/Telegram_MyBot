@@ -3,6 +3,7 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+
 namespace Telegram;
 
 public class Telegram_Botik
@@ -27,7 +28,7 @@ public class Telegram_Botik
 
         receiverOptions = new()
         {
-            AllowedUpdates = Array.Empty<UpdateType>() // receive all update types except ChatMember related updates
+            AllowedUpdates = Array.Empty<UpdateType>() 
         };
 
     }
