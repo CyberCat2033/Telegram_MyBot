@@ -26,13 +26,13 @@ public class Telegram_Botik
     #endregion
 
     #region Constructor
-    public Telegram_Botik(string token, CancellationTokenSource CTS)
+    public Telegram_Botik(string token, CancellationTokenSource CTSource)
     {
         botClient = new TelegramBotClient(token);
         StartTime = DateTime.Now.ToString();
         me = botClient.GetMeAsync().Result;
         Name = me.Username;
-        cts = CTS;
+        cts = CTSource;
 
         receiverOptions = new()
         {
@@ -72,7 +72,7 @@ public class Telegram_Botik
         cts.Cancel();
         Console.BackgroundColor = ConsoleColor.DarkRed;
         Console.ForegroundColor = ConsoleColor.Yellow;
-        await Console.Out.WriteLineAsync($"The Bot has been sttoped in {StopTime}");
+        await Console.Out.WriteLineAsync($"The Bot was stopped at {StopTime}");
         Console.ResetColor();
     }
     #endregion
@@ -82,7 +82,7 @@ public class Telegram_Botik
     {
         Console.BackgroundColor = ConsoleColor.DarkGreen;
         Console.ForegroundColor = ConsoleColor.Yellow;
-        await Console.Out.WriteLineAsync($"Start listening in {StartTime}");
+        await Console.Out.WriteLineAsync($"Start listening at {StartTime}");
         Console.ResetColor();
     }
 
