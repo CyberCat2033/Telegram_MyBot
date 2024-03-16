@@ -1,14 +1,16 @@
-﻿namespace Telegram;
+﻿using System.Threading;
+
+namespace Telegram;
 
 public class Program
 {
     async public static Task Main(string[] args)
     {
-        var tg_bot = new Telegram_Botik(@"6095156109:AAEcsa618XaTXLToVcmLsk0WoumXfnICk3s");
+        CancellationTokenSource cts = new();
+        var tg_bot = new Telegram_Botik(token: @"6095156109:AAEcsa618XaTXLToVcmLsk0WoumXfnICk3s",
+            cts);
         await tg_bot.Start();
         Console.ReadLine();
-
-        // Send cancellation request to stop bot
-        tg_bot.cts.Cancel();
+        await tg_bot.Stop();
     }
 }
