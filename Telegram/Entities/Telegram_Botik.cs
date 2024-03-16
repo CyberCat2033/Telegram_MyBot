@@ -1,16 +1,19 @@
 ﻿#define DEBUG
 #undef DEBUG
-#region using
+
+#region usings
+using Telegramchik.Commands;
 using System.Diagnostics;
 using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
+using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 #endregion
 
-namespace Telegram;
+namespace Telegramchik;
 
 public class Telegram_Botik
 {
@@ -19,10 +22,11 @@ public class Telegram_Botik
     public string? Name { get; init; }
     public CancellationTokenSource cts;
     public User me { get; init; }
-    private IEnumerable<BotCommand> commandsToBeSet;
+    private IEnumerable<BotCommand> MyCommands;
     public string StopTime { get; private set; }
     private ReceiverOptions receiverOptions { get; init; }
-    private TelegramBotClient botClient;
+    private ITelegramBotClient botClient;
+    private FCommand FCommand;
     #endregion
 
     #region Constructor
@@ -34,20 +38,27 @@ public class Telegram_Botik
         Name = me.Username;
         cts = CTSource;
 
+        FCommand = new("/f", "Press f");
+        FCommand.AddStikerByURL("https://github.com/TelegramBots/book/raw/master/src/docs/sticker-fred.webp");
+
         receiverOptions = new()
         {
             AllowedUpdates = Array.Empty<UpdateType>(),
             ThrowPendingUpdates = true,
         };
+        
 
-        commandsToBeSet =
+        MyCommands =
         [
 
             new BotCommand{Command="/start",Description="Start Bot"},
             new BotCommand{Command="/filter",Description="Add Filter"},
             new BotCommand{Command="/stop",Description="Stop Bot"},
-            new BotCommand{Command="/f",Description="Press f"},
+            new BotCommand{Command=FCommand.Command,
+                Description=FCommand.Description},
         ];
+
+        
 
     }
     #endregion
@@ -63,7 +74,18 @@ public class Telegram_Botik
             receiverOptions: receiverOptions,
             cancellationToken: cts.Token
             );
-        await botClient.SetMyCommandsAsync(commandsToBeSet);
+        await botClient.SetMyCommandsAsync(MyCommands);
+    }
+
+    public async Task Test()
+    {
+
+        BotCommand[] currentCommands = await botClient.GetMyCommandsAsync();
+        foreach ( BotCommand command in currentCommands )
+        {
+            await Console.Out.WriteLineAsync(command.Command);
+        } 
+
     }
 
     public async Task Stop()
@@ -106,20 +128,30 @@ public class Telegram_Botik
             return;
         var chatId = message.Chat.Id;
 
-        #if DEBUG
+        if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
+        {
+            if (messageText.ToLower() == FCommand.Command)
+            {
+                await FCommand.Execute(message, client, token);
+            }
+        }
+
+#if DEBUG
             Message sentMessage = await botClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: messageText + $" \nTime elapsed: {sw.ElapsedMilliseconds} ms",
                 replyMarkup: new ReplyKeyboardRemove(),
                 replyToMessageId: update.Message.MessageId,
                 cancellationToken: token);
-        #else
-            Message sentMessage = await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: messageText,
-                replyMarkup: new ReplyKeyboardRemove(),
-                replyToMessageId: update.Message.MessageId,
-                cancellationToken: token);
+#else
+
+        
+            //Message sentMessage = await botClient.SendTextMessageAsync(
+            //    chatId: chatId,
+            //    text: messageText,
+            //    replyMarkup: new ReplyKeyboardRemove(),
+            //    replyToMessageId: update.Message.MessageId,
+            //    cancellationToken: token);
 
         #endif
 
