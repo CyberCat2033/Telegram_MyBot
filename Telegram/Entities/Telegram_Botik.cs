@@ -37,9 +37,7 @@ public class Telegram_Botik
         me = botClient.GetMeAsync().Result;
         Name = me.Username;
         cts = CTSource;
-
         FCommand = new("/f", "Press f");
-        FCommand.AddStikerByURL("https://github.com/TelegramBots/book/raw/master/src/docs/sticker-fred.webp");
 
         receiverOptions = new()
         {

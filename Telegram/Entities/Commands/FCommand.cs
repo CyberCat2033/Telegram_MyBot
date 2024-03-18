@@ -3,7 +3,7 @@ using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands;
 
-public class FCommand : Telegram_Command
+public class FCommand : TelegramCommand
 {
     List<string> Stickers_URLs = new();
 
