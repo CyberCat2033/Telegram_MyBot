@@ -1,7 +1,4 @@
-﻿#define DEBUG
-#undef DEBUG
-
-#region usings
+﻿#region usings
 using Telegramchik.Commands;
 using System.Diagnostics;
 using System.Threading;
@@ -21,7 +18,7 @@ public class Telegram_Botik
     public string StartTime { get; init; }
     public string? Name { get; init; }
     public CancellationTokenSource cts;
-    public User me { get; init; }
+    //public User me { get; init; }
     private IEnumerable<BotCommand> MyCommands;
     public string StopTime { get; private set; }
     private ReceiverOptions receiverOptions { get; init; }
@@ -34,11 +31,9 @@ public class Telegram_Botik
     {
         botClient = new TelegramBotClient(token);
         StartTime = DateTime.Now.ToString();
-        me = botClient.GetMeAsync().Result;
-        Name = me.Username;
+        //me = botClient.GetMeAsync().Result;
+        //Name = me.Username;
         cts = CTSource;
-        FCommand = new("/f", "Press f");
-
         receiverOptions = new()
         {
             AllowedUpdates = Array.Empty<UpdateType>(),
@@ -52,8 +47,7 @@ public class Telegram_Botik
             new BotCommand{Command="/start",Description="Start Bot"},
             new BotCommand{Command="/filter",Description="Add Filter"},
             new BotCommand{Command="/stop",Description="Stop Bot"},
-            new BotCommand{Command=FCommand.Command,
-                Description=FCommand.Description},
+            FCommand = new("/f", "Press f")
         ];
 
         
@@ -109,17 +103,11 @@ public class Telegram_Botik
 
     private async Task HandlePollingErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken token)
     {
-        throw new NotImplementedException();
+        await Console.Out.WriteLineAsync(exception.Message);
     }
 
     private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
     {
-
-        #if DEBUG
-            var sw = new Stopwatch();
-            sw.Start();
-        #endif
-
         if (update.Message is not { } message)
             return;
         if (message.Text is not { } messageText)
@@ -133,26 +121,6 @@ public class Telegram_Botik
                 await FCommand.Execute(message, client, token);
             }
         }
-
-#if DEBUG
-            Message sentMessage = await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: messageText + $" \nTime elapsed: {sw.ElapsedMilliseconds} ms",
-                replyMarkup: new ReplyKeyboardRemove(),
-                replyToMessageId: update.Message.MessageId,
-                cancellationToken: token);
-#else
-
-        
-            //Message sentMessage = await botClient.SendTextMessageAsync(
-            //    chatId: chatId,
-            //    text: messageText,
-            //    replyMarkup: new ReplyKeyboardRemove(),
-            //    replyToMessageId: update.Message.MessageId,
-            //    cancellationToken: token);
-
-        #endif
-
 
     }
     #endregion

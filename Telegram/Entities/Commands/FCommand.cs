@@ -1,9 +1,11 @@
-﻿using Telegram.Bot;
+﻿using System.Reflection.Metadata.Ecma335;
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace Telegramchik.Commands;
 
-public class FCommand : TelegramCommand
+public class FCommand : TelegramCommands
 {
     List<string> Stickers_URLs = new();
 
@@ -23,5 +25,6 @@ public class FCommand : TelegramCommand
             sticker: GetRandomSticker(),
             cancellationToken: CT
             );
+
     }
 }

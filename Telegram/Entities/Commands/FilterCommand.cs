@@ -12,7 +12,7 @@ using Telegramchik.Commands;
 
 namespace Telegram.Commands;
 
-public class FilterCommand : TelegramCommand
+public class FilterCommand : TelegramCommands
 {
     private Dictionary<string, Message> FilterDict = new();
 
