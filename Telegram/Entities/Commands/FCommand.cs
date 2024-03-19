@@ -1,5 +1,7 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using System.Threading;
 using Telegram.Bot;
+using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -7,24 +9,50 @@ namespace Telegramchik.Commands;
 
 public class FCommand : TelegramCommands
 {
-    List<string> Stickers_URLs = new();
+    List<string> Stciker_IDs = new();
 
 
     public FCommand(string Command, string Description = "") : base(Command, Description) { }
 
-    public void AddStikerByURL(string StickerURL) => Stickers_URLs.Add(StickerURL);
-    public void AddStikerByURL(string[] StickerURLs) => Stickers_URLs.Concat(StickerURLs);
+    public void AddStikerByFileId(string StickerURL) => Stciker_IDs.Add(StickerURL);
+    public void AddStikerByFileId(string[] StickerURLs) => Stciker_IDs.Concat(StickerURLs);
 
-    private InputFileUrl GetRandomSticker() => InputFile.FromUri(Stickers_URLs[new Random().Next(0, Stickers_URLs.Count() - 1)]);
+    private InputFileId GetRandomSticker() => InputFile.FromFileId(Stciker_IDs[new Random().Next(0, Stciker_IDs.Count() - 1)]);
 
-
-    public override async  Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CT)
+    public void AddStickerByReply(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
-        await botClient.SendStickerAsync(
+        if (message.ReplyToMessage.Type != MessageType.Sticker)
+        {
+            return;
+        }
+
+        AddStikerByFileId(message.ReplyToMessage.Sticker.FileId);
+
+        botClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
-            sticker: GetRandomSticker(),
+        text: "Fuck",
             cancellationToken: CT
             );
+    }
+
+    public override async  Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CancelationToken)
+    {
+        long ChatId = message.Chat.Id;
+
+        await botClient.SendStickerAsync(
+            chatId: ChatId,
+            sticker: GetRandomSticker(),
+            cancellationToken: CancelationToken
+            );
+
+        
+
+        await botClient.DeleteMessageAsync(
+            chatId: ChatId,
+            messageId: message.MessageId,
+            cancellationToken: CancelationToken
+            );
+
 
     }
 }

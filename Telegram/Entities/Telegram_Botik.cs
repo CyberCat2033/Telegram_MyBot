@@ -39,18 +39,20 @@ public class Telegram_Botik
             AllowedUpdates = Array.Empty<UpdateType>(),
             ThrowPendingUpdates = true,
         };
-        
+
 
         MyCommands =
         [
 
             new BotCommand{Command="/start",Description="Start Bot"},
-            new BotCommand{Command="/filter",Description="Add Filter"},
-            new BotCommand{Command="/stop",Description="Stop Bot"},
+            new BotCommand{Command="/filter",Description="Add filter"},
+            new BotCommand{Command="/stop",Description="Stop filter"},
             FCommand = new("/f", "Press f")
         ];
-
         
+
+
+
 
     }
     #endregion
@@ -73,10 +75,10 @@ public class Telegram_Botik
     {
 
         BotCommand[] currentCommands = await botClient.GetMyCommandsAsync();
-        foreach ( BotCommand command in currentCommands )
+        foreach (BotCommand command in currentCommands)
         {
             await Console.Out.WriteLineAsync(command.Command);
-        } 
+        }
 
     }
 
@@ -120,10 +122,14 @@ public class Telegram_Botik
             {
                 await FCommand.Execute(message, client, token);
             }
+            if (message.Text == "/fadd")
+            {
+                FCommand.AddStickerByReply(message, botClient, token);
+            }
+
         }
+        #endregion
+
 
     }
-    #endregion
-
-
 }
