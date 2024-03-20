@@ -14,12 +14,11 @@ public class Telegram_Botik
     public string StartTime { get; init; }
     public string? Name { get; init; }
     public CancellationTokenSource cts;
-    //public User me { get; init; }
-    private IEnumerable<BotCommand> MyCommands;
     public string StopTime { get; private set; }
     private ReceiverOptions receiverOptions { get; init; }
     private ITelegramBotClient botClient;
-    private FCommand FCommand;
+    private Dictionary<string, TelegramCommands> CommandDict;
+
     #endregion
 
     #region Constructor
@@ -36,15 +35,12 @@ public class Telegram_Botik
             ThrowPendingUpdates = true,
         };
 
+        CommandDict = new()
+        {
+            ["/f"] = new FCommand("/f", "Press F"),
 
-        MyCommands =
-        [
+        };
 
-            new BotCommand{Command="/start",Description="Start Bot"},
-            new BotCommand{Command="/filter",Description="Add filter"},
-            new BotCommand{Command="/stop",Description="Stop filter"},
-            FCommand = new("/f", "Press f")
-        ];
 
 
 
@@ -64,7 +60,7 @@ public class Telegram_Botik
             receiverOptions: receiverOptions,
             cancellationToken: cts.Token
             );
-        await botClient.SetMyCommandsAsync(MyCommands);
+        await botClient.SetMyCommandsAsync(CommandDict.Select(x => x.Value));
     }
 
     public async Task Test()
@@ -114,14 +110,12 @@ public class Telegram_Botik
 
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
-            if (messageText.ToLower() == FCommand.Command)
+            TelegramCommands telegramCommands;
+            if (CommandDict.TryGetValue(messageText.ToLower(), out telegramCommands) )
             {
-                await FCommand.Execute(message, client, token);
+                telegramCommands.Execute(message, client, token);
             }
-            if (message.Text == "/fadd")
-            {
-                FCommand.AddStickerByReply(message, botClient, token);
-            }
+            
 
         }
         #endregion

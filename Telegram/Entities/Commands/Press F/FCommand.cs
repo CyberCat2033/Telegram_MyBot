@@ -1,36 +1,23 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegramchik.Commands;
 
 public class FCommand : TelegramCommands
 {
-    List<string> Stciker_IDs = new();
-
+    private List<string> Stciker_IDs = new() {
+    "CAACAgIAAxkBAAICMmX62PS9RFDMHb2On7G9DOjKRbnWAAIMAQACTptkAmOSrBs0ItNHNAQ",
+    "CAACAgIAAxkBAAICNWX62QEWGPMfuMwT5vrKEEHnAfXpAAIdAQACTptkAnofe0zzYUy2NAQ",
+    "CAACAgIAAxkBAAICOGX62Q4Pqga0wRQJQ8318dMix5z0AAJJAQACTptkAmgp7D2NPAz-NAQ",
+    "CAACAgIAAxkBAAICO2X62SU7RssdPTUVSMllmI8_jv5UAAK7AANOm2QCTTNNKc65rHw0BA",
+    "CAACAgIAAxkBAAICPmX62TyzZAST_iSxB_40KgXAynKzAALHFQACOk4JSQFAjkLpBTNnNAQ",
+    };
 
     public FCommand(string Command, string Description = "") : base(Command, Description) { }
 
-    public void AddStikerByFileId(string StickerURL) => Stciker_IDs.Add(StickerURL);
-    public void AddStikerByFileId(string[] StickerURLs) => Stciker_IDs.Concat(StickerURLs);
-
     private InputFileId GetRandomSticker() => InputFile.FromFileId(Stciker_IDs[new Random().Next(0, Stciker_IDs.Count() - 1)]);
-
-    public void AddStickerByReply(Message message, ITelegramBotClient botClient, CancellationToken CT)
-    {
-        if (message.ReplyToMessage.Type != MessageType.Sticker)
-        {
-            return;
-        }
-
-        AddStikerByFileId(message.ReplyToMessage.Sticker.FileId);
-
-        botClient.SendTextMessageAsync(
-            chatId: message.Chat.Id,
-        text: "Fuck",
-            cancellationToken: CT
-            );
-    }
 
     public override async Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CancelationToken)
     {
