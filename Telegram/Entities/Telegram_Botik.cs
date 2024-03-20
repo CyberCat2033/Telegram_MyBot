@@ -111,10 +111,15 @@ public class Telegram_Botik
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
             TelegramCommands telegramCommands;
-            if (CommandDict.TryGetValue(messageText.ToLower(), out telegramCommands) )
+            await Task.Run(() =>
             {
-                telegramCommands.Execute(message, client, token);
-            }
+                if (CommandDict.TryGetValue(messageText.ToLower(), out telegramCommands))
+                {
+                    telegramCommands.Execute(message, client, token);
+                }
+
+            });
+            
             
 
         }
