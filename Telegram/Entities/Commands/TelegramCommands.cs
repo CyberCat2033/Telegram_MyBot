@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands;
@@ -11,7 +6,7 @@ namespace Telegramchik.Commands;
 public abstract class TelegramCommands : BotCommand
 {
 
-    public  TelegramCommands(string Command, string Description = "") 
+    public TelegramCommands(string Command, string Description = "")
     {
         this.Command = Command;
         this.Description = Description;

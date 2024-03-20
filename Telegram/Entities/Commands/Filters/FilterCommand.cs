@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegramchik;
-using Telegramchik.Commands;
 
 namespace Telegramchik.Commands;
 
@@ -35,7 +27,7 @@ public class FilterCommand : TelegramCommands
 
     public override async Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
-        var chatID = message.Chat.Id;
+        long chatID = message.Chat.Id;
         Message? FilterReplyMessage;
         if (message is { Type: MessageType.Text, Text: not null })
         {

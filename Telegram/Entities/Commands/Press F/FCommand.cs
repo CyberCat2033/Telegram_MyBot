@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Threading;
-using Telegram.Bot;
-using Telegram.Bot.Requests;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -35,7 +32,7 @@ public class FCommand : TelegramCommands
             );
     }
 
-    public override async  Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CancelationToken)
+    public override async Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CancelationToken)
     {
         long ChatId = message.Chat.Id;
 
@@ -45,7 +42,7 @@ public class FCommand : TelegramCommands
             cancellationToken: CancelationToken
             );
 
-        
+
 
         await botClient.DeleteMessageAsync(
             chatId: ChatId,

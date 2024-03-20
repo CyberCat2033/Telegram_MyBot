@@ -1,13 +1,9 @@
 ﻿#region usings
-using Telegramchik.Commands;
-using System.Diagnostics;
-using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
+using Telegramchik.Commands;
 #endregion
 
 namespace Telegramchik;
@@ -49,7 +45,7 @@ public class Telegram_Botik
             new BotCommand{Command="/stop",Description="Stop filter"},
             FCommand = new("/f", "Press f")
         ];
-        
+
 
 
 
@@ -114,7 +110,7 @@ public class Telegram_Botik
             return;
         if (message.Text is not { } messageText)
             return;
-        var chatId = message.Chat.Id;
+        long chatId = message.Chat.Id;
 
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
