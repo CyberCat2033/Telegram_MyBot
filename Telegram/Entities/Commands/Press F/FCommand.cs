@@ -1,13 +1,11 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegramchik.Commands;
 
 public class FCommand : TelegramCommands
 {
-    private List<string> Stciker_IDs = new() {
+    private List<string> Stcikers_IDs = new() {
     "CAACAgIAAxkBAAICMmX62PS9RFDMHb2On7G9DOjKRbnWAAIMAQACTptkAmOSrBs0ItNHNAQ",
     "CAACAgIAAxkBAAICNWX62QEWGPMfuMwT5vrKEEHnAfXpAAIdAQACTptkAnofe0zzYUy2NAQ",
     "CAACAgIAAxkBAAICOGX62Q4Pqga0wRQJQ8318dMix5z0AAJJAQACTptkAmgp7D2NPAz-NAQ",
@@ -17,24 +15,29 @@ public class FCommand : TelegramCommands
 
     public FCommand(string Command, string Description = "") : base(Command, Description) { }
 
-    private InputFileId GetRandomSticker() => InputFile.FromFileId(Stciker_IDs[new Random().Next(0, Stciker_IDs.Count() - 1)]);
+    private InputFileId GetRandomSticker()
+    {
+        if (Stcikers_IDs.Count == 0)
+        {
+            throw new Exception("Stickers_Ids List is empty");
+        }
+        return InputFile.FromFileId(Stcikers_IDs[new Random().Next(0, Stcikers_IDs.Count)]);
+    }
 
-    public override async Task Execute(Message message, ITelegramBotClient botClient, CancellationToken CancelationToken)
+    public override async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CancellationToken)
     {
         long ChatId = message.Chat.Id;
 
         await botClient.SendStickerAsync(
             chatId: ChatId,
             sticker: GetRandomSticker(),
-            cancellationToken: CancelationToken
+            cancellationToken: CancellationToken
             );
-
-
 
         await botClient.DeleteMessageAsync(
             chatId: ChatId,
             messageId: message.MessageId,
-            cancellationToken: CancelationToken
+            cancellationToken: CancellationToken
             );
 
 

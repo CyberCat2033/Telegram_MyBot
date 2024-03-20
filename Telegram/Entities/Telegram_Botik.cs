@@ -115,7 +115,7 @@ public class Telegram_Botik
             {
                 if (CommandDict.TryGetValue(messageText.ToLower(), out telegramCommands))
                 {
-                    telegramCommands.Execute(message, client, token);
+                    telegramCommands.ExecuteAsync(message, client, token);
                 }
 
             });
