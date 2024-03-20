@@ -10,7 +10,7 @@ using Telegram.Bot.Types.Enums;
 using Telegramchik;
 using Telegramchik.Commands;
 
-namespace Telegram.Commands;
+namespace Telegramchik.Commands;
 
 public class FilterCommand : TelegramCommands
 {
