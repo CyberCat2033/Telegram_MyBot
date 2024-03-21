@@ -1,7 +1,9 @@
 ﻿namespace Telegramchik.Commands.Filters;
 
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegramchik;
 
 public class Filter : IFilter
 {
@@ -10,10 +12,14 @@ public class Filter : IFilter
     public string? FileId { get; set; }
     public string Name { get; set; }
 
-    public Filter(Message message)
+    public Filter(Message message, ITelegramBotClient botClient)
     {
         if (message.ReplyToMessage == null)
-            throw new Exception("No Reply");
+        {
+            ExeptionHandler.SendExeptionMessageAsync("You *must* reply to message to set filter");
+            return;
+        }
+            
 
         ParseMessage(message);
     }
@@ -23,7 +29,8 @@ public class Filter : IFilter
         FileId = GetFileId(message.ReplyToMessage);
         if (message.Text.Split().Count() < 2)
         {
-            throw new Exception("Filter Command must contains key_word");
+            ExeptionHandler.SendExeptionMessageAsync("Filter Command *must* contains key_word");
+            return;
         }
         Name = message.Text.Split()[1];
         Type = message.ReplyToMessage.Type;

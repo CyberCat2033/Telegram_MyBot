@@ -9,7 +9,7 @@ using Telegramchik.Commands.Filters;
 
 namespace Telegramchik;
 
-public class Telegram_Botik
+public class Telegramchik_Botik
 {
     #region Properties and fields 
     public string StartTime { get; init; }
@@ -23,7 +23,7 @@ public class Telegram_Botik
     #endregion
 
     #region Constructor
-    public Telegram_Botik(string token, CancellationTokenSource CTSource)
+    public Telegramchik_Botik(string token, CancellationTokenSource CTSource)
     {
         botClient = new TelegramBotClient(token);
         StartTime = DateTime.Now.ToString();
@@ -109,6 +109,8 @@ public class Telegram_Botik
         if (message.Text is not { } messageText)
             return;
         long chatId = message.Chat.Id;
+
+        await ExeptionHandler.ChangeFields(message ,client, token);
 
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {

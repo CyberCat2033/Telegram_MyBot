@@ -14,7 +14,7 @@ public class FilterCommand : TelegramCommands
 
     public async override Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
-        await FiltersGroup.Add(message);
+        await FiltersGroup.Add(message, botClient);
         await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId, CT);
     }
 }

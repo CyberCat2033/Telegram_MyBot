@@ -5,7 +5,7 @@ public class Program
     async public static Task Main(string[] args)
     {
         CancellationTokenSource cts = new();
-        Telegram_Botik tg_bot = new Telegram_Botik(token: @"6095156109:AAEcsa618XaTXLToVcmLsk0WoumXfnICk3s",
+        Telegramchik_Botik tg_bot = new Telegramchik_Botik(token: @"6095156109:AAEcsa618XaTXLToVcmLsk0WoumXfnICk3s",
             CTSource: cts);
         await tg_bot.Start();
         //tg_bot.Test();
