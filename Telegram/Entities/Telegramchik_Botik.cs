@@ -1,4 +1,5 @@
 ﻿#region usings
+using Microsoft.VisualBasic;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -114,15 +115,27 @@ public class Telegramchik_Botik
 
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
+            
             TelegramCommands telegramCommands;
-            await Task.Run(() =>
+            if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
             {
-                if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
+                try
                 {
-                    telegramCommands.ExecuteAsync(message, client, token);
+                    await telegramCommands.ExecuteAsync(message, client, token);
+                }
+                catch (ArgumentException exc)
+                {
+                    await botClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: exc.Message,
+                replyToMessageId: message.MessageId,
+                cancellationToken: token
+                );
                 }
 
-            });
+            }
+                
+            
             
             
 
@@ -130,6 +143,7 @@ public class Telegramchik_Botik
         else
         {
             await StringFilterParser(message, botClient, token);
+
         }
         #endregion
 
@@ -150,7 +164,7 @@ public class Telegramchik_Botik
         }
     }
 
-    public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken, IFilter filter)
+    public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken, Filter filter)
     {
         ChatId chatId = message.Chat.Id;
 

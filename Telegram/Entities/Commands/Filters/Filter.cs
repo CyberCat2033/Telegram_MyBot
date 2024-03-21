@@ -5,7 +5,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik;
 
-public class Filter : IFilter
+public class Filter
 {
     public string? Text { get; set; }
     public MessageType Type { get; set; }
@@ -16,8 +16,7 @@ public class Filter : IFilter
     {
         if (message.ReplyToMessage == null)
         {
-            ExeptionHandler.SendExeptionMessageAsync("You *must* reply to message to set filter");
-            return;
+            throw new ArgumentException("You *must* reply to message to set filter");
         }
             
 
@@ -29,8 +28,7 @@ public class Filter : IFilter
         FileId = GetFileId(message.ReplyToMessage);
         if (message.Text.Split().Count() < 2)
         {
-            ExeptionHandler.SendExeptionMessageAsync("Filter Command *must* contains key_word");
-            return;
+            throw new ArgumentException("Filter Command *must* contains keyword");
         }
         Name = message.Text.Split()[1];
         Type = message.ReplyToMessage.Type;
@@ -50,6 +48,8 @@ public class Filter : IFilter
             _ => throw new ArgumentException("Unexpected message type", nameof(message)),
         };
     }
+
+
 
 
 }
