@@ -1,9 +1,7 @@
 ﻿namespace Telegramchik.Commands.Filters;
 
-using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.Payments;
 
 public class Filter : IFilter
 {
@@ -22,15 +20,12 @@ public class Filter : IFilter
 
     private void ParseMessage(Message message)
     {
-        string separator = "";
-        byte index = 1; 
-        if (message.Text.Contains("\"")) 
-        { 
-            separator = "\""; 
-            index = 0;
+        FileId = GetFileId(message.ReplyToMessage);
+        if (message.Text.Split().Count() < 2)
+        {
+            throw new Exception("Filter Command must contains key_word");
         }
-        FileId = GetFileId(message);
-        Name = message.Text.Split(separator)[index];
+        Name = message.Text.Split()[1];
         Type = message.ReplyToMessage.Type;
         Text = message.ReplyToMessage.Type == MessageType.Text ? message.ReplyToMessage.Text : "";
     }

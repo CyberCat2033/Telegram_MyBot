@@ -7,9 +7,9 @@ using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands.Filters;
 
-public class Filters
+public class FilterCollection
 {
-    public Dictionary<string, Filter> Filters_Dict = new();
+    private Dictionary<string, Filter> Filters_Dict   = new();
 
     public async Task Add(Message message) => await Add(new Filter(message));
 
@@ -20,5 +20,11 @@ public class Filters
             if (Filters_Dict.TryAdd(filter.Name, filter)) return;
             Filters_Dict[filter.Name] = filter;
         });
+    }
+
+    public bool TryGetValue(string key, out Filter fl)
+    {
+        return Filters_Dict.TryGetValue(key, out fl); 
+        
     }
 }
