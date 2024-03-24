@@ -20,6 +20,7 @@ public class Telegramchik_Botik
     private ReceiverOptions receiverOptions { get; init; }
     private ITelegramBotClient botClient;
     private Dictionary<string, TelegramCommands> CommandDict;
+    private char[] removeChars = new[] { '.' , ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')' };
 
     #endregion
 
@@ -111,8 +112,6 @@ public class Telegramchik_Botik
             return;
         long chatId = message.Chat.Id;
 
-        await ExeptionHandler.ChangeFields(message ,client, token);
-
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
             
@@ -153,9 +152,9 @@ public class Telegramchik_Botik
     public async Task StringFilterParser(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
     {
         if (message.Type != MessageType.Text) return;
-        var array = new[] { ".", ",", "/", "?", "!", "@", "#", "$", "*", "^", "(", ")" };
         if (!FiltersGroup.TryGetValue(message.Chat.Id, out var filterCollection)) return;
-        foreach (var mes in message.Text.ToLower().Split())
+        var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
+        foreach (var mes in filterText)
         {
             if (filterCollection.TryGetValue(mes, out var fl))
             {
