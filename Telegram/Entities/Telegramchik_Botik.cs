@@ -41,7 +41,8 @@ public class Telegramchik_Botik
         CommandDict = new()
         {
             ["/f"] = new FCommand("/f", "Press F"),
-            ["/filter"] = new FilterCommand("/filter", "Add Filter")
+            ["/filter"] = new FilterCommand("/filter", "Add Filter"),
+            ["/stop"] = new StopCommand("/stop", "Stop FIlter"),
 
         };
 

@@ -7,23 +7,29 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Telegramchik.Commands.Filters
+namespace Telegramchik.Commands.Filters;
+
+public static class FiltersGroup
 {
-    public static class FiltersGroup
+    private static ConcurrentDictionary<long, FilterCollection> FiltersDictionary { get; } = new();
+
+    public static async Task Add( Message message)
     {
-        private static ConcurrentDictionary<long, FilterCollection> FiltersDictionary { get; } = new();
-
-        public static async Task Add( Message message, ITelegramBotClient botClient)
-        {
-            long ChatId = message.Chat.Id;
-            FiltersDictionary[ChatId] = new FilterCollection();
-            await FiltersDictionary[ChatId].Add(message, botClient);
-        }
-        public static bool TryGetValue(long key, out FilterCollection flc)
-        {
-            return FiltersDictionary.TryGetValue(key, out flc);
-        }
-
-
+        long ChatId = message.Chat.Id;
+        FiltersDictionary.TryAdd(ChatId, new FilterCollection());
+        await FiltersDictionary[ChatId].Add(message);
     }
+
+    public static async Task Remove(Message message)
+    {
+        long ChatId = message.Chat.Id;
+        await FiltersDictionary[ChatId].Remove(message);
+    }
+
+    public static bool TryGetValue(long key, out FilterCollection flc)
+    {
+        return FiltersDictionary.TryGetValue(key, out flc);
+    }
+
+
 }

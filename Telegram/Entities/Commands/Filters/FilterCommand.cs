@@ -14,8 +14,15 @@ public class FilterCommand : TelegramCommands
 
     public async override Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
-        await FiltersGroup.Add(message, botClient);
+        await FiltersGroup.Add(message);
+        await botClient.SendTextMessageAsync(
+            chatId: message.Chat.Id,
+            text: $"Filter \"{message.Text.Split()[1]}\" has been added",
+            cancellationToken: CT
+            );
         await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId, CT);
+        await Task.Delay(1000);
+        await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId + 1, CT);
     }
 }
 

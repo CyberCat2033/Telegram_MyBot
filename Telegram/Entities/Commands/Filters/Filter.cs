@@ -12,11 +12,11 @@ public class Filter
     public string? FileId { get; set; }
     public string Name { get; set; }
 
-    public Filter(Message message, ITelegramBotClient botClient)
+    public Filter(Message message)
     {
         if (message.ReplyToMessage == null)
         {
-            throw new ArgumentException("You *must* reply to message to set filter");
+            throw new ArgumentException("You must reply to message to set filter");
         }
             
 
@@ -28,7 +28,7 @@ public class Filter
         FileId = GetFileId(message.ReplyToMessage);
         if (message.Text.Split().Count() < 2)
         {
-            throw new ArgumentException("Filter Command *must* contains keyword");
+            throw new ArgumentException("Filter Command must contains keyword");
         }
         Name = message.Text.Split()[1];
         Type = message.ReplyToMessage.Type;
@@ -42,6 +42,7 @@ public class Filter
             MessageType.Sticker => message.Sticker.FileId,
             MessageType.Text => null,
             MessageType.Audio => message.Audio.FileId,
+            MessageType.Photo => message.Photo[0].FileId,
             MessageType.Video => message.Video.FileId,
             MessageType.Voice => message.Voice.FileId,
             MessageType.VideoNote => message.VideoNote.FileId,

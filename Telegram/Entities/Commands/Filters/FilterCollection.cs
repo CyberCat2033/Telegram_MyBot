@@ -11,10 +11,10 @@ namespace Telegramchik.Commands.Filters;
 
 public class FilterCollection
 {
-    private ConcurrentDictionary<string, Filter> Filters_Dict = new();
+    private Dictionary<string, Filter> Filters_Dict = new();
 
-    public async Task Add(Message message, ITelegramBotClient botClient) 
-        => await Add(new Filter(message,botClient));
+    public async Task Add(Message message) 
+        => await Add(new Filter(message));
 
     public async Task Add(Filter filter)
     {
@@ -22,6 +22,15 @@ public class FilterCollection
         {
             Filters_Dict[filter.Name] = filter;
         });
+    }
+
+    public async Task Remove(Message message)
+    {
+        await Task.Run(() =>
+        {
+            Filters_Dict.Remove(message.Text.Split()[1]);
+        });
+
     }
 
     public bool TryGetValue(string key, out Filter fl)
