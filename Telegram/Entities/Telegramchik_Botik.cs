@@ -14,11 +14,10 @@ public class Telegramchik_Botik
 {
     #region Properties and fields 
     public string StartTime { get; init; }
-    public string? Name { get; init; }
     public CancellationTokenSource cts;
     public string StopTime { get; private set; }
     private ReceiverOptions receiverOptions { get; init; }
-    private ITelegramBotClient botClient;
+    private readonly ITelegramBotClient botClient;
     private Dictionary<string, TelegramCommands> CommandDict;
     private char[] removeChars = ['.' , ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')'];
 
@@ -29,8 +28,6 @@ public class Telegramchik_Botik
     {
         botClient = new TelegramBotClient(token);
         StartTime = DateTime.Now.ToString();
-        //me = botClient.GetMeAsync().Result;
-        //Name = me.Username;
         cts = CTSource;
         receiverOptions = new()
         {
@@ -153,7 +150,7 @@ public class Telegramchik_Botik
 
     public async Task StringFilterParser(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
     {
-        if (message.Type != MessageType.Text) return;
+        if (message is not { Type: MessageType.Text, Text: not null }) return;
         if (!FiltersGroup.TryGetValue(message.Chat.Id, out var filterCollection)) return;
         var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
         foreach (var mes in filterText)

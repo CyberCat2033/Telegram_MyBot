@@ -10,7 +10,7 @@ namespace Telegramchik.Commands;
 
 public interface IMessageSenderAndDeleter
 {
-    public async Task SendMessageAndDeleteAsync(
+    public static async Task SendMessageAndDeleteAsync(
         Message message,
         ITelegramBotClient botClient,
         CancellationToken CT,

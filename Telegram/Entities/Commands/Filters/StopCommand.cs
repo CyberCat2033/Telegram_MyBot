@@ -19,5 +19,6 @@ public class StopCommand : TelegramCommands, IMessageSenderAndDeleter
     public async override Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
         await FiltersGroup.Remove(message);
+        await IMessageSenderAndDeleter.SendMessageAndDeleteAsync(message, botClient,CT, $"The filter \"{message.Text.Split()[1]}\" has been stopped");
     }
 }
