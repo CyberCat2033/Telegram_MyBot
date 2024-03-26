@@ -20,7 +20,7 @@ public class Telegramchik_Botik
     private ReceiverOptions receiverOptions { get; init; }
     private ITelegramBotClient botClient;
     private Dictionary<string, TelegramCommands> CommandDict;
-    private char[] removeChars = new[] { '.' , ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')' };
+    private char[] removeChars = ['.' , ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')'];
 
     #endregion
 
@@ -85,7 +85,7 @@ public class Telegramchik_Botik
         cts.Cancel();
         Console.BackgroundColor = ConsoleColor.DarkRed;
         Console.ForegroundColor = ConsoleColor.Yellow;
-        await Console.Out.WriteLineAsync($"The Bot was stopped at {StopTime}");
+        await Console.Out.WriteAsync($"The Bot was stopped at {StopTime}");
         Console.ResetColor();
     }
     #endregion
@@ -94,9 +94,10 @@ public class Telegramchik_Botik
     private async Task start_notification()
     {
         Console.BackgroundColor = ConsoleColor.DarkGreen;
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        await Console.Out.WriteLineAsync($"Start listening at {StartTime}");
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        await Console.Out.WriteAsync($"Start listening at {StartTime}");
         Console.ResetColor();
+        await Console.Out.WriteLineAsync();
     }
 
 
