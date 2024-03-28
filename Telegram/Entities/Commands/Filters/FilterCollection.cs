@@ -11,31 +11,32 @@ namespace Telegramchik.Commands.Filters;
 
 public class FilterCollection
 {
-    private Dictionary<string, Filter> Filters_Dict = new();
+	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
 
-    public async Task Add(Message message) 
-        => await Add(new Filter(message));
+	public async Task Add(Message message)
+		=> await Add(new Filter(message));
 
-    public async Task Add(Filter filter)
-    {
-        await Task.Run(() =>
-        {
-            Filters_Dict[filter.Name] = filter;
-        });
-    }
+	public async Task Add(Filter filter)
+	{
+		await Task.Run(() =>
+		{
+			Filters_Dict[filter.Name] = filter;
+		});
+	}
 
-    public async Task Remove(Message message)
-    {
-        await Task.Run(() =>
-        {
-            Filters_Dict.Remove(message.Text.Split()[1]);
-        });
+	public async Task Remove(Message message)
+	{
+		Filter val;
+		if (!Filters_Dict.TryRemove(message.Text.Split()[1], out val))
+		{
+			throw new ArgumentException("Filters doesn`t contains such a keyword");
+		}
 
-    }
+	}
 
-    public bool TryGetValue(string key, out Filter fl)
-    {
-        return Filters_Dict.TryGetValue(key, out fl); 
-        
-    }
+	public bool TryGetValue(string key, out Filter fl)
+	{
+		return Filters_Dict.TryGetValue(key, out fl);
+
+	}
 }

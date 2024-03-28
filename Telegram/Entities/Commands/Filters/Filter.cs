@@ -18,7 +18,7 @@ public class Filter
         {
             throw new ArgumentException("You must reply to message to set filter");
         }
-            
+
 
         ParseMessage(message);
     }
@@ -32,7 +32,7 @@ public class Filter
         }
         Name = message.Text.Split()[1];
         Type = message.ReplyToMessage.Type;
-        Text = message.ReplyToMessage.Type == MessageType.Text ? message.ReplyToMessage.Text : "";
+        Text = message.ReplyToMessage.Type == MessageType.Text ? @message.ReplyToMessage.Text : "";
     }
 
     private string? GetFileId(Message message)

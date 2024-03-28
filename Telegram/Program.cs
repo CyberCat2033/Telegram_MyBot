@@ -11,11 +11,12 @@ public class Program
         //tg_bot.Test();
         while (true)
         {
-            if (Console.ReadLine().ToLower() is "/stop" or "/exit")
+            if (Console.ReadLine()?.ToLower() is not "/stop" and not "/exit")
             {
-                await tg_bot.Stop();
-                break;
+                continue;
             }
+            await tg_bot.Stop();
+            break;
         }
         Console.Read();
     }
