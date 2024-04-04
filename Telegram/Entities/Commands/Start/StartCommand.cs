@@ -12,16 +12,17 @@ public class StartCommand : TelegramCommands
 
 	public override async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
 	{
-		SettingsFactory.TryAdd(message.Chat.Id);
-		string GreatingText = $"Hi, my name is {botClient.GetMeAsync().Result.FirstName}. I`m a very stupid, " +
+		string GreatingText;
+		if (SettingsFactory.TryAdd(message.Chat.Id))
+		{
+			GreatingText = $"Hi, my name is {botClient.GetMeAsync().Result.FirstName}. I`m a very stupid, " +
 		"but interesting bot";
-		long chatID = message.Chat.Id;
-		await botClient.SendTextMessageAsync(
-			chatID,
-			GreatingText,
-			cancellationToken: CT
-		).ConfigureAwait(false);
-		await Task.Delay(100);
-		await botClient.DeleteMessageAsync(chatID, message.MessageId, CT).ConfigureAwait(false);
+		}
+		else GreatingText = "The bot is already running";
+
+		await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
+		botClient, CT,
+		text: $"The filter \"{message.Text.Split()[1]}\" has been added",
+		false);
 	}
 }
