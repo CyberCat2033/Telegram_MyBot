@@ -22,7 +22,7 @@ public class StartCommand : TelegramCommands
 
 		await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
 		botClient, CT,
-		text: $"The filter \"{message.Text.Split()[1]}\" has been added",
+		text: GreatingText,
 		false);
 	}
 }

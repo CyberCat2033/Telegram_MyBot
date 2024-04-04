@@ -35,9 +35,9 @@ public class Settings
 		});
 	}
 
-	public bool TryGetFilter(string key, out Filter fl)
+	public bool TryGetFilter(string key, out Filter filter)
 	{
-		return Filters_Dict.TryGetValue(key, out fl);
+		return Filters_Dict.TryGetValue(key, out filter);
 
 	}
 	#endregion

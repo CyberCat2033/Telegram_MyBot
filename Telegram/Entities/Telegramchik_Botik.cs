@@ -6,6 +6,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
+using Telegramchik.Settings;
 #endregion
 
 namespace Telegramchik;
@@ -152,13 +153,13 @@ public class Telegramchik_Botik
 	public async Task StringFilterParser(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
 	{
 		if (message is not { Type: MessageType.Text, Text: not null }) return;
-		if (!FiltersGroup.TryGetValue(message.Chat.Id, out var filterCollection)) return;
-		var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
+		var filterCollection = SettingsFactory.TryGet(message.Chat.Id);
+        var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
 		foreach (var mes in filterText)
 		{
-			if (filterCollection.TryGetValue(mes, out var fl))
+			if (filterCollection.TryGetFilter(mes, out var filter))
 			{
-				await ExecuteAsync(message, botClient, cancellationToken, fl);
+				await ExecuteAsync(message, botClient, cancellationToken, filter);
 			}
 		}
 	}
@@ -169,7 +170,7 @@ public class Telegramchik_Botik
 
 		Dictionary<MessageType, Func<Task>> messageHandlers = new Dictionary<MessageType, Func<Task>>
 		{
-			{ MessageType.Text, async () => await botClient.SendTextMessageAsync(chatId, @filter.Text, replyToMessageId: message.MessageId, parseMode: ParseMode.Html, cancellationToken: cancellationToken) },
+			{ MessageType.Text, async () => await botClient.SendTextMessageAsync(chatId, filter.Text, replyToMessageId: message.MessageId, parseMode: ParseMode.Html, cancellationToken: cancellationToken) },
 			{ MessageType.Photo, async () => await botClient.SendPhotoAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
 			{ MessageType.Audio, async () => await botClient.SendAudioAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
 			{ MessageType.Video, async () => await botClient.SendVideoAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
