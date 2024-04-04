@@ -1,5 +1,6 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegramchik.Settings;
 
 namespace Telegramchik.Commands;
 
@@ -11,6 +12,7 @@ public class StartCommand : TelegramCommands
 
 	public override async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
 	{
+		SettingsFactory.TryAdd(message.Chat.Id);
 		string GreatingText = $"Hi, my name is {botClient.GetMeAsync().Result.FirstName}. I`m a very stupid, " +
 		"but interesting bot";
 		long chatID = message.Chat.Id;

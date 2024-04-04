@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Telegramchik.Settings;
 
-public static  class SettingsFactory
+public static class SettingsFactory
 {
     private static ConcurrentDictionary<long, Settings> _settings = new();
 
-    public static void Add(long ChatId, Settings settings)
+    public static void TryAdd(long ChatId)
     {
-        _settings[ChatId] = settings;
+        _settings.TryAdd(ChatId, new Settings());
     }
 
     public static Settings Get(long ChatId)

@@ -16,10 +16,8 @@ public class Settings
     #region Filters
 
     public async Task AddFilter(Message message)
-        => await AddFilter(new Filter(message));
-
-    public async Task AddFilter(Filter filter)
     {
+        Filter filter= new(message);
         await Task.Run(() =>
         {
             Filters_Dict[filter.Name] = filter;

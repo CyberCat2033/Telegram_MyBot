@@ -14,10 +14,8 @@ public class FilterCollection
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
 
 	public async Task Add(Message message)
-		=> await Add(new Filter(message));
-
-	public async Task Add(Filter filter)
 	{
+		Filter filter = new(message);
 		await Task.Run(() =>
 		{
 			Filters_Dict[filter.Name] = filter;
