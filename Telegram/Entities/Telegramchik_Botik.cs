@@ -107,6 +107,10 @@ public class Telegramchik_Botik
 
 	private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
 	{
+		if (update.Type == UpdateType.ChatMember)
+		{
+			Console.WriteLine("ЫЫЫЫЫЫЫЫ");
+		}
 		if (update.Message is not { } message)
 			return;
 		if (message.Text is not { } messageText)

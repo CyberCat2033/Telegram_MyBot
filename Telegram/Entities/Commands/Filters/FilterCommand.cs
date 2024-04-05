@@ -20,7 +20,7 @@ public class FilterCommand : TelegramBotCommands
 		await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
 		botClient,
 		cancelationToken,
-		text: $"The filter \"{message.Text.Split()[1]}\" has been added");
+		text: $"The welcome message has been successfully changed");
 	}
 }
 

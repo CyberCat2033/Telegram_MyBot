@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
+using Telegramchiik.Greeting;
 using Telegramchik.Commands.Filters;
 
 namespace Telegramchik.SettingsManagment;
@@ -12,7 +13,7 @@ namespace Telegramchik.SettingsManagment;
 public class Settings
 {
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
-	private string WelcomeMesage;
+	private WelcomeMessage welcomeMessage;
 
 	#region Filters
 
@@ -44,6 +45,14 @@ public class Settings
 	#endregion
 
 	#region Greating
+
+	public async Task SetWelcome(Message message)
+	{
+		await Task.Run(() =>
+		{
+			welcomeMessage = new WelcomeMessage(message);
+		});
+	}
 
 	#endregion
 }
