@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik;
 
 namespace Telegramchiik.Greeting;
 
-public class WelcomeMessage : IMessageProperties
+public class WelcomeMessage : MessageHandler
 {
-    public string? Text { get; private set; }
-    public MessageType Type { get; private set; }
-    public string? FileId { get; private set; }
+    public WelcomeMessage(Message message) : base(message)
+    {
+        ParseMessage(message);
+    }
+
+    private void ParseMessage(Message message)
+    {
+        base.ParseMessage(message);
+    }
 }

@@ -159,7 +159,8 @@ public class Telegramchik_Botik
 		{
 			if (filterCollection.TryGetFilter(mes, out var filter))
 			{
-				await ((IMessageProperties)filter).ExecuteAsync(filter, message, botClient, cancellationToken);
+				await filter.ExecuteAsync(message, botClient, cancellationToken);
+				return;
 			}
 		}
 	}
