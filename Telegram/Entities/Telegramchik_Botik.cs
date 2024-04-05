@@ -6,7 +6,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
-using Telegramchik.Settings;
+using Telegramchik.SettingsManagment;
 #endregion
 
 namespace Telegramchik;
@@ -19,7 +19,7 @@ public class Telegramchik_Botik
 	public string StopTime { get; private set; }
 	private ReceiverOptions receiverOptions { get; init; }
 	private readonly ITelegramBotClient botClient;
-	private Dictionary<string, TelegramCommands> CommandDict;
+	private Dictionary<string, TelegramBotCommands> CommandDict;
 	private char[] removeChars = ['.', ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')'];
 
 	#endregion
@@ -116,7 +116,7 @@ public class Telegramchik_Botik
 		if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
 		{
 
-			TelegramCommands telegramCommands;
+			TelegramBotCommands telegramCommands;
 			if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
 			{
 				try
@@ -159,33 +159,10 @@ public class Telegramchik_Botik
 		{
 			if (filterCollection.TryGetFilter(mes, out var filter))
 			{
-				await ExecuteAsync(message, botClient, cancellationToken, filter);
+				await ((IMessageProperties)filter).ExecuteAsync(filter, message, botClient, cancellationToken);
 			}
 		}
 	}
 
-	public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken, Filter filter)
-	{
-		ChatId chatId = message.Chat.Id;
-
-		Dictionary<MessageType, Func<Task>> messageHandlers = new Dictionary<MessageType, Func<Task>>
-		{
-			{ MessageType.Text, async () => await botClient.SendTextMessageAsync(chatId, filter.Text, replyToMessageId: message.MessageId, parseMode: ParseMode.Html, cancellationToken: cancellationToken) },
-			{ MessageType.Photo, async () => await botClient.SendPhotoAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
-			{ MessageType.Audio, async () => await botClient.SendAudioAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
-			{ MessageType.Video, async () => await botClient.SendVideoAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken: cancellationToken) },
-			{ MessageType.Voice, async () => await botClient.SendVoiceAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken : cancellationToken) },
-			{ MessageType.Sticker, async () => await botClient.SendStickerAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken : cancellationToken) },
-			{ MessageType.VideoNote, async () => await botClient.SendVideoNoteAsync(chatId, InputFile.FromFileId(filter.FileId), replyToMessageId: message.MessageId, cancellationToken : cancellationToken) },
-		};
-
-		if (messageHandlers.ContainsKey(filter.Type))
-		{
-			await messageHandlers[filter.Type].Invoke();
-		}
-		else
-		{
-			return;
-		}
-	}
+	
 }

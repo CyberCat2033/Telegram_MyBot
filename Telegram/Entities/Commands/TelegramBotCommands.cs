@@ -3,10 +3,10 @@ using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands;
 
-public abstract class TelegramCommands : BotCommand
+public abstract class TelegramBotCommands : BotCommand
 {
 
-    public TelegramCommands(string Command, string Description = "")
+    public TelegramBotCommands(string Command, string Description = "")
     {
         this.Command = Command;
         this.Description = Description;

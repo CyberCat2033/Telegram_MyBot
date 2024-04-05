@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegramchik.Commands.Filters;
 
-namespace Telegramchik.Settings;
+namespace Telegramchik.SettingsManagment;
 
 public class Settings
 {
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
+	private string WelcomeMesage;
 
 	#region Filters
 

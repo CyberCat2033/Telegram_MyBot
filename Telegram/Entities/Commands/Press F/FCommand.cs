@@ -3,7 +3,7 @@ using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands;
 
-public class FCommand : TelegramCommands
+public class FCommand : TelegramBotCommands
 {
     private List<string> Stcikers_IDs = new() {
     "CAACAgIAAxkBAAICMmX62PS9RFDMHb2On7G9DOjKRbnWAAIMAQACTptkAmOSrBs0ItNHNAQ",

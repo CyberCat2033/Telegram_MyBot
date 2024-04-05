@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Telegramchik.Settings;
+namespace Telegramchik.SettingsManagment;
 
 public static class SettingsFactory
 {

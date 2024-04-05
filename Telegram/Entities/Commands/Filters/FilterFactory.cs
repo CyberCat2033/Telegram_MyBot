@@ -9,7 +9,7 @@ using Telegram.Bot.Types;
 
 namespace Telegramchik.Commands.Filters;
 
-public class FilterCollection
+public class FilterFactory
 {
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
 
@@ -22,12 +22,12 @@ public class FilterCollection
 		});
 	}
 
-	public async Task Remove(Message message)
+	public async Task TryRemove(Message message)
 	{
 		Filter val;
 		if (!Filters_Dict.TryRemove(message.Text.Split()[1], out val))
 		{
-			throw new ArgumentException("Filters doesn`t contains such a keyword");
+			
 		}
 
 	}

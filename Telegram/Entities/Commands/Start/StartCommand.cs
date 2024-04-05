@@ -1,10 +1,10 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegramchik.Settings;
+using Telegramchik.SettingsManagment;
 
 namespace Telegramchik.Commands;
 
-public class StartCommand : TelegramCommands
+public class StartCommand : TelegramBotCommands
 {
 	public StartCommand(string Command, string Description = "") : base(Command, Description)
 	{

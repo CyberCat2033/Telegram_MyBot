@@ -1,16 +1,17 @@
 ﻿namespace Telegramchik.Commands.Filters;
 
+using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik;
 
-public class Filter
+public class Filter : IMessageProperties
 {
-    public string? Text { get; set; }
-    public MessageType Type { get; set; }
-    public string? FileId { get; set; }
-    public string Name { get; set; }
+    public string? Text { get; private set; }
+    public MessageType Type { get; private set; }
+    public string? FileId { get; private set; }
+    public string Name { get; private set; }
 
     public Filter(Message message)
     {
@@ -49,8 +50,5 @@ public class Filter
             _ => throw new ArgumentException("Unexpected message type", nameof(message)),
         };
     }
-
-
-
 
 }

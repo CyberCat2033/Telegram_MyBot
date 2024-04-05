@@ -7,10 +7,11 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegramchik;
 using Telegramchik.Commands;
+using Telegramchik.SettingsManagment;
 
 namespace Telegramchik.Commands.Filters;
 
-public class StopCommand : TelegramCommands
+public class StopCommand : TelegramBotCommands
 {
     public StopCommand(string Command, string Description = "") : base(Command, Description)
     {
@@ -18,7 +19,8 @@ public class StopCommand : TelegramCommands
 
     public async override Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT)
     {
-        await FiltersGroup.Remove(message);
+        var settings = SettingsFactory.TryGet(message.Chat.Id);
+        await settings.RemoveFilter(message);
         await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message, botClient,CT, $"The filter \"{message.Text.Split()[1]}\" has been stopped");
     }
 }

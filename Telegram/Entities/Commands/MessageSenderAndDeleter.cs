@@ -13,7 +13,7 @@ public static class MessageSenderAndDeleter
 	public static async Task SendMessageAndDeleteAsync(
 		Message message,
 		ITelegramBotClient botClient,
-		CancellationToken CT,
+		CancellationToken cancelationToken,
 		string text,
 		bool DeleteSelfMessage = true
 	)
@@ -21,10 +21,10 @@ public static class MessageSenderAndDeleter
 		await botClient.SendTextMessageAsync(
 			chatId: message.Chat.Id,
 			text: text,
-			cancellationToken: CT
+			cancellationToken: cancelationToken
 		);
-		await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId, CT);
+		await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId, cancelationToken);
 		await Task.Delay(1000);
-		if (DeleteSelfMessage) await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId + 1, CT);
+		if (DeleteSelfMessage) await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId + 1, cancelationToken);
 	}
 }
