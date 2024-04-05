@@ -24,7 +24,6 @@ public class SetWelcomeCommand : TelegramBotCommands
         await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
         botClient,
         cancelationToken,
-        text: $"The filter \"{message.Text.Split()[1]}\" has been added");
-        throw new NotImplementedException();
+        text: $"The welcome message has been successfullly changed");
     }
 }

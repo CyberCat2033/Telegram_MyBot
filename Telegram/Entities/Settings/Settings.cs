@@ -13,7 +13,7 @@ namespace Telegramchik.SettingsManagment;
 public class Settings
 {
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
-	private WelcomeMessage welcomeMessage;
+	private WelcomeMessage welcomeMessage = new();
 
 	#region Filters
 
@@ -52,6 +52,11 @@ public class Settings
 		{
 			welcomeMessage = new WelcomeMessage(message);
 		});
+	}
+
+	public WelcomeMessage GetWelcomeMessage()
+	{
+		return welcomeMessage;
 	}
 
 	#endregion

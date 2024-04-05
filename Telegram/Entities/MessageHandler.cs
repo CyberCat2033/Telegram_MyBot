@@ -24,13 +24,11 @@ public class MessageHandler
         }
     }
 
+    public MessageHandler() { }
+
     protected void ParseMessage(Message message)
     {
         FileId = GetFileId(message.ReplyToMessage);
-        if (message.Text.Split().Count() < 2)
-        {
-            throw new ArgumentException("This command MUST contains keyword");
-        }
         Type = message.ReplyToMessage.Type;
         Text = message.ReplyToMessage.Type == MessageType.Text ? message.ReplyToMessage.Text : "";
     }

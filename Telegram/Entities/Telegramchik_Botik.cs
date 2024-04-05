@@ -6,6 +6,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
+using Telegramchik.Greeting;
 using Telegramchik.SettingsManagment;
 #endregion
 
@@ -41,8 +42,8 @@ public class Telegramchik_Botik
 			["/f"] = new FCommand("/f", "Press F"),
 			["/filter"] = new FilterCommand("/filter", "Add Filter"),
 			["/stop"] = new StopCommand("/stop", "Stop Filter"),
-			["/start"] = new StartCommand("/start", "Start bot")
-
+			["/start"] = new StartCommand("/start", "Start bot"),
+			["/setwelcome"] = new SetWelcomeCommand("/setwelcome", "Change welcome command"),
 		};
 
 
@@ -107,9 +108,25 @@ public class Telegramchik_Botik
 
 	private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
 	{
-		if (update.Type == UpdateType.ChatMember)
+		if (update.Message.NewChatMembers != null)
 		{
-			Console.WriteLine("ЫЫЫЫЫЫЫЫ");
+            
+            try
+            {
+                var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
+                await settings.GetWelcomeMessage().ExecuteAsync(update.Message, botClient, token);
+            }
+            catch (Exception exc)
+            {
+                await botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: exc.Message,
+            replyToMessageId: update.Message.MessageId,
+            cancellationToken: token
+            );
+            }
+			return;			
+
 		}
 		if (update.Message is not { } message)
 			return;
@@ -149,10 +166,10 @@ public class Telegramchik_Botik
 			await StringFilterParser(message, botClient, token);
 
 		}
-		#endregion
 
 
 	}
+		#endregion
 
 	public async Task StringFilterParser(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
 	{

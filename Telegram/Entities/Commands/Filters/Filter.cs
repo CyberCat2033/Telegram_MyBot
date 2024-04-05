@@ -18,6 +18,10 @@ public class Filter : MessageHandler
     private void ParseMessage(Message message)
     {
         base.ParseMessage(message);
+        if (message.Text.Split().Count() < 2)
+        {
+            throw new ArgumentException("This command MUST contains keyword");
+        }
         Name = message.Text.Split()[1];
     }
 
