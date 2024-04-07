@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegramchiik.Greeting;
 using Telegramchik.Commands.Filters;
+using Telegramchik.Commands.Goodbye;
 
 namespace Telegramchik.SettingsManagment;
 
@@ -14,6 +15,7 @@ public class Settings
 {
 	private ConcurrentDictionary<string, Filter> Filters_Dict = new();
 	private WelcomeMessage welcomeMessage = new();
+	private GoodbyeMessage goodbyeMessage = new();
 
 	#region Filters
 
@@ -57,6 +59,22 @@ public class Settings
 	public WelcomeMessage GetWelcomeMessage()
 	{
 		return welcomeMessage;
+	}
+
+	#endregion
+
+	#region Goodbye
+
+	public async Task SetGoodbye(Message message)
+	{
+
+		goodbyeMessage = new GoodbyeMessage(message);
+
+	}
+
+	public GoodbyeMessage GetGoodbyeMessage()
+	{
+		return goodbyeMessage;
 	}
 
 	#endregion

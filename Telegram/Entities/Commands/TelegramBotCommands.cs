@@ -12,6 +12,6 @@ public abstract class TelegramBotCommands : BotCommand
         this.Description = Description;
     }
 
-    public abstract Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CT);
+    public abstract Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancelationToken);
 
 }
