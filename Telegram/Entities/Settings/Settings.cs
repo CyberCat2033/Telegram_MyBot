@@ -68,9 +68,12 @@ public class Settings
 	public async Task SetGoodbye(Message message)
 	{
 
-		goodbyeMessage = new GoodbyeMessage(message);
+        await Task.Run(() =>
+        {
+            goodbyeMessage = new GoodbyeMessage(message);
+        });
 
-	}
+    }
 
 	public GoodbyeMessage GetGoodbyeMessage()
 	{

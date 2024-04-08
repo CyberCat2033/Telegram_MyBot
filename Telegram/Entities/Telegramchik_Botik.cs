@@ -6,6 +6,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
+using Telegramchik.Commands.Goodbye;
 using Telegramchik.Greeting;
 using Telegramchik.SettingsManagment;
 #endregion
@@ -17,11 +18,11 @@ public class Telegramchik_Botik
 	#region Properties and fields 
 	public string StartTime { get; init; }
 	public CancellationTokenSource cts;
-	public string StopTime { get; private set; }
+	public string? StopTime { get; private set; }
 	private ReceiverOptions receiverOptions { get; init; }
 	private readonly ITelegramBotClient botClient;
-	private Dictionary<string, TelegramBotCommands> CommandDict;
-	private char[] removeChars = ['.', ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')'];
+	private readonly Dictionary<string, TelegramBotCommands> CommandDict;
+	private readonly char[] removeChars = ['.', ',', '/', '?', '!', '@', '#', '$', '*', '^', '(', ')'];
 
 	#endregion
 
@@ -44,6 +45,7 @@ public class Telegramchik_Botik
 			["/stop"] = new StopCommand("/stop", "Stop Filter"),
 			["/start"] = new StartCommand("/start", "Start bot"),
 			["/setwelcome"] = new SetWelcomeCommand("/setwelcome", "Change welcome command"),
+			["/setgoodbye"] = new SetGoodbyeCommand("/setgoodbye", "Change goodbye command")
 		};
 
 
@@ -113,7 +115,28 @@ public class Telegramchik_Botik
 			return;			
 
 		}
-		if (update.Message is not { } message)
+        if (update.Message.LeftChatMember != null)
+        {
+
+            try
+            {
+                var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
+                await settings.GetGoodbyeMessage().ExecuteAsync(update.Message, botClient, token);
+            }
+            catch (Exception exc)
+            {
+                await botClient.SendTextMessageAsync(
+            chatId: update.Message.Chat.Id,
+            text: exc.Message,
+            replyToMessageId: update.Message.MessageId,
+            cancellationToken: token
+            );
+            }
+            return;
+
+        }
+
+        if (update.Message is not { } message)
 			return;
 		if (message.Text is not { } messageText)
 			return;

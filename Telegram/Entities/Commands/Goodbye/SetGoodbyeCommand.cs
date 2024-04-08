@@ -23,6 +23,6 @@ public class SetGoodbyeCommand : TelegramBotCommands
         await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
         botClient,
         cancelationToken,
-        text: $"The welcome message has been successfullly changed");
+        text: $"The godbye message has been successfullly changed");
     }
 }

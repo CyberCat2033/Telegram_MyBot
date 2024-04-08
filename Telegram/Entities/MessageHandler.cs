@@ -30,7 +30,7 @@ public class MessageHandler
     {
         FileId = GetFileId(message.ReplyToMessage);
         Type = message.ReplyToMessage.Type;
-        Text = message.ReplyToMessage.Type == MessageType.Text ? message.ReplyToMessage.Text : "";
+        Text = Type == MessageType.Text ? message.ReplyToMessage.Text : "";
     }
 
     protected virtual string? GetFileId(Message message)
@@ -48,7 +48,7 @@ public class MessageHandler
         };
     }
 
-    public async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
+    public virtual async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
     {
         ChatId chatId = message.Chat.Id;
 

@@ -5,7 +5,7 @@ namespace Telegramchik.Commands;
 
 public class FCommand : TelegramBotCommands
 {
-    private List<string> Stcikers_IDs = new() {
+    private readonly string[] Stcikers_IDs = {
     "CAACAgIAAxkBAAICMmX62PS9RFDMHb2On7G9DOjKRbnWAAIMAQACTptkAmOSrBs0ItNHNAQ",
     "CAACAgIAAxkBAAICNWX62QEWGPMfuMwT5vrKEEHnAfXpAAIdAQACTptkAnofe0zzYUy2NAQ",
     "CAACAgIAAxkBAAICOGX62Q4Pqga0wRQJQ8318dMix5z0AAJJAQACTptkAmgp7D2NPAz-NAQ",
@@ -13,15 +13,15 @@ public class FCommand : TelegramBotCommands
     "CAACAgIAAxkBAAICPmX62TyzZAST_iSxB_40KgXAynKzAALHFQACOk4JSQFAjkLpBTNnNAQ",
     };
 
-    public FCommand(string Command, string Description = "") : base(Command, Description) { }
+    public FCommand(string Command, string Description) : base(Command, Description) { }
 
     private InputFileId GetRandomSticker()
     {
-        if (Stcikers_IDs.Count == 0)
+        if (Stcikers_IDs.Length == 0)
         {
             throw new Exception("Stickers_Ids List is empty");
         }
-        return InputFile.FromFileId(Stcikers_IDs[new Random().Next(0, Stcikers_IDs.Count)]);
+        return InputFile.FromFileId(Stcikers_IDs[new Random().Next(0, Stcikers_IDs.Length)]);
     }
 
     public override async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CancellationToken)
