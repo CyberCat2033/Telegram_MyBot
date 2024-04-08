@@ -47,10 +47,6 @@ public class Telegramchik_Botik
 		};
 
 
-
-
-
-
 	}
 	#endregion
 
@@ -66,17 +62,6 @@ public class Telegramchik_Botik
 			cancellationToken: cts.Token
 			);
 		await botClient.SetMyCommandsAsync(CommandDict.Select(x => x.Value));
-	}
-
-	public async Task Test()
-	{
-
-		BotCommand[] currentCommands = await botClient.GetMyCommandsAsync();
-		foreach (BotCommand command in currentCommands)
-		{
-			await Console.Out.WriteLineAsync(command.Command);
-		}
-
 	}
 
 	public async Task Stop()
