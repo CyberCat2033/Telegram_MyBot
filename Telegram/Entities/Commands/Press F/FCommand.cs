@@ -17,10 +17,7 @@ public class FCommand : TelegramBotCommands
 
     private InputFileId GetRandomSticker()
     {
-        if (Stcikers_IDs.Length == 0)
-        {
-            throw new Exception("Stickers_Ids List is empty");
-        }
+        
         return InputFile.FromFileId(Stcikers_IDs[new Random().Next(0, Stcikers_IDs.Length)]);
     }
 

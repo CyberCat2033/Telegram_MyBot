@@ -1,4 +1,5 @@
 ﻿#region usings
+using System.Linq.Expressions;
 using Microsoft.VisualBasic;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -90,100 +91,102 @@ public class Telegramchik_Botik
 
 	private async Task HandlePollingErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken token)
 	{
-		await Console.Out.WriteLineAsync(exception.Message);
+		Console.WriteLine(exception.Message);
 	}
 
 	private async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken token)
 	{
-		if (update.Message.NewChatMembers != null)
-		{
-            
-            try
-            {
-                var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
-                await settings.GetWelcomeMessage().ExecuteAsync(update.Message, botClient, token);
-            }
-            catch (Exception exc)
-            {
-                await botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: exc.Message,
-            replyToMessageId: update.Message.MessageId,
-            cancellationToken: token
-            );
-            }
-			return;			
-
-		}
-        if (update.Message.LeftChatMember != null)
-        {
-
-            try
-            {
-                var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
-                await settings.GetGoodbyeMessage().ExecuteAsync(update.Message, botClient, token);
-            }
-            catch (Exception exc)
-            {
-                await botClient.SendTextMessageAsync(
-            chatId: update.Message.Chat.Id,
-            text: exc.Message,
-            replyToMessageId: update.Message.MessageId,
-            cancellationToken: token
-            );
-            }
-            return;
-
-        }
-
-        if (update.Message is not { } message)
-			return;
-		if (message.Text is not { } messageText)
-			return;
-		long chatId = message.Chat.Id;
-
-		if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
+		var message = update.Message;
+		var chatId = message.Chat.Id;
+		if (Conditions.WelcomeCondition(update))
 		{
 
-			TelegramBotCommands telegramCommands;
-			if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
+			try
 			{
+				var settings = SettingsFactory.TryGet(chatId);
+				await settings.GetWelcomeMessage().ExecuteAsync(message, botClient, token);
+			}
+			catch (Exception exc)
+			{
+				await botClient.SendTextMessageAsync(
+			chatId: update.Message.Chat.Id,
+			text: exc.Message,
+			replyToMessageId: update.Message.MessageId,
+			cancellationToken: token
+			);
+				return;
+
+			}
+			if (Conditions.GoodbyeCondition(update))
+			{
+
 				try
 				{
-					await telegramCommands.ExecuteAsync(message, client, token);
+					var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
+					await settings.GetGoodbyeMessage().ExecuteAsync(update.Message, botClient, token);
 				}
 				catch (Exception exc)
 				{
 					await botClient.SendTextMessageAsync(
-				chatId: chatId,
+				chatId: update.Message.Chat.Id,
 				text: exc.Message,
-				replyToMessageId: message.MessageId,
+				replyToMessageId: update.Message.MessageId,
 				cancellationToken: token
 				);
 				}
+				return;
+
+			}
+
+			if (message is not { })
+				return;
+			if (message.Text is not { } messageText)
+				return;
+
+			if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
+			{
+
+				TelegramBotCommands telegramCommands;
+				if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
+				{
+					await telegramCommands.ExecuteAsync(message, client, token);
+					try
+					{
+						await telegramCommands.ExecuteAsync(message, client, token);
+					}
+					catch (Exception exc)
+					{
+						await botClient.SendTextMessageAsync(
+					chatId: chatId,
+					text: exc.Message,
+					replyToMessageId: message.MessageId,
+					cancellationToken: token
+					);
+					}
+
+				}
+
+
+
+
+
+			}
+			else
+			{
+				await StringFilterParser(message, botClient, token);
 
 			}
 
 
-
-
-
 		}
-		else
-		{
-			await StringFilterParser(message, botClient, token);
-
-		}
-
-
 	}
-		#endregion
+	#endregion
 
 	public async Task StringFilterParser(Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
 	{
 		if (message is not { Type: MessageType.Text, Text: not null }) return;
 		var filterCollection = SettingsFactory.TryGet(message.Chat.Id);
-        var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
+		var filterText = message.Text.ToLower().Split().Select(x => x.Trim(removeChars));
 		foreach (var mes in filterText)
 		{
 			if (filterCollection.TryGetFilter(mes, out var filter))
@@ -194,5 +197,5 @@ public class Telegramchik_Botik
 		}
 	}
 
-	
+
 }

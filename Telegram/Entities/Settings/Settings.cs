@@ -8,6 +8,7 @@ using Telegram.Bot.Types;
 using Telegramchiik.Greeting;
 using Telegramchik.Commands.Filters;
 using Telegramchik.Commands.Goodbye;
+using Telegramchik.Commands;
 
 namespace Telegramchik.SettingsManagment;
 
@@ -34,7 +35,7 @@ public class Settings
 		{
 			if (!Filters_Dict.TryRemove(message.Text.Split()[1], out var val))
 			{
-				throw new ArgumentException("Filters doesn`t contains such a keyword");
+				throw new TelegramExeption("Filters doesn`t contains such a keyword", message);
 			}
 		});
 	}
@@ -68,12 +69,12 @@ public class Settings
 	public async Task SetGoodbye(Message message)
 	{
 
-        await Task.Run(() =>
-        {
-            goodbyeMessage = new GoodbyeMessage(message);
-        });
+		await Task.Run(() =>
+		{
+			goodbyeMessage = new GoodbyeMessage(message);
+		});
 
-    }
+	}
 
 	public GoodbyeMessage GetGoodbyeMessage()
 	{

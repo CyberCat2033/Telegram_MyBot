@@ -27,7 +27,7 @@ public class FilterFactory
 		Filter val;
 		if (!Filters_Dict.TryRemove(message.Text.Split()[1], out val))
 		{
-			
+			throw new TelegramExeption("This chat doesn`t contains such a filter", message);
 		}
 
 	}
