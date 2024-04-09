@@ -16,6 +16,6 @@ public static class SettingsFactory
 	public static Settings TryGet(long ChatId)
 	{
 		return _settings.TryGetValue(ChatId, out var settings) ?
-		 settings : throw new ArgumentException("There`s no settings with such ID");
+		 settings : throw new ArgumentException("Pleease start bot before using it");
 	}
 }
