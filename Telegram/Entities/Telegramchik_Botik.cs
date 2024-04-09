@@ -117,68 +117,66 @@ public class Telegramchik_Botik
 				return;
 
 			}
-			if (Conditions.GoodbyeCondition(update))
-			{
+		}
+		if (Conditions.GoodbyeCondition(update))
+		{
 
+			try
+			{
+				var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
+				await settings.GetGoodbyeMessage().ExecuteAsync(update.Message, botClient, token);
+			}
+			catch (Exception exc)
+			{
+				await botClient.SendTextMessageAsync(
+			chatId: update.Message.Chat.Id,
+			text: exc.Message,
+			replyToMessageId: update.Message.MessageId,
+			cancellationToken: token
+			);
+			}
+			return;
+
+		}
+
+		if (message is not { })
+			return;
+		if (message.Text is not { } messageText)
+			return;
+
+		if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
+		{
+
+			if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out var telegramCommands))
+			{
 				try
 				{
-					var settings = SettingsFactory.TryGet(update.Message.Chat.Id);
-					await settings.GetGoodbyeMessage().ExecuteAsync(update.Message, botClient, token);
+					await telegramCommands.ExecuteAsync(message, client, token);
 				}
 				catch (Exception exc)
 				{
 					await botClient.SendTextMessageAsync(
-				chatId: update.Message.Chat.Id,
+				chatId: chatId,
 				text: exc.Message,
-				replyToMessageId: update.Message.MessageId,
+				replyToMessageId: message.MessageId,
 				cancellationToken: token
 				);
 				}
-				return;
 
 			}
 
-			if (message is not { })
-				return;
-			if (message.Text is not { } messageText)
-				return;
-
-			if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
-			{
-
-				TelegramBotCommands telegramCommands;
-				if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out telegramCommands))
-				{
-					await telegramCommands.ExecuteAsync(message, client, token);
-					try
-					{
-						await telegramCommands.ExecuteAsync(message, client, token);
-					}
-					catch (Exception exc)
-					{
-						await botClient.SendTextMessageAsync(
-					chatId: chatId,
-					text: exc.Message,
-					replyToMessageId: message.MessageId,
-					cancellationToken: token
-					);
-					}
-
-				}
 
 
-
-
-
-			}
-			else
-			{
-				await StringFilterParser(message, botClient, token);
-
-			}
 
 
 		}
+		else
+		{
+			await StringFilterParser(message, botClient, token);
+
+		}
+
+
 	}
 	#endregion
 
