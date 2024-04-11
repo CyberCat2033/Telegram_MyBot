@@ -20,7 +20,7 @@ public class StartCommand : TelegramBotCommands
 		}
 		else GreatingText = "The bot is already running";
 
-		await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
+		await MessageSenderAndDeleter.DoMess(message,
 		botClient, CT,
 		text: GreatingText,
 		false);

@@ -20,7 +20,7 @@ public class SetGoodbyeCommand : TelegramBotCommands
     {
         var settings = SettingsFactory.TryGet(message.Chat.Id);
         await settings.SetGoodbye(message);
-        await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
+        await MessageSenderAndDeleter.DoMess(message,
         botClient,
         cancelationToken,
         text: $"The godbye message has been successfullly changed");
