@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegramchik.SettingsManagment;
 
@@ -20,7 +14,7 @@ public class SetGoodbyeCommand : TelegramBotCommands
     {
         var settings = SettingsFactory.TryGet(message.Chat.Id);
         await settings.SetGoodbye(message);
-        await MessageSenderAndDeleter.DoMess(message,
+        await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
         botClient,
         cancelationToken,
         text: $"The godbye message has been successfullly changed");
