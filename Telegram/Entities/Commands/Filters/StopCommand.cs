@@ -21,7 +21,7 @@ public class StopCommand : TelegramBotCommands
     {
         var settings = SettingsFactory.TryGet(message.Chat.Id);
         await settings.RemoveFilter(message);
-        await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message, botClient,
+        await MessageSenderAndDeleter.DoMess(message, botClient,
             CT, $"The filter \"{message.Text.Split()[1]}\" has been stopped");
     }
 }

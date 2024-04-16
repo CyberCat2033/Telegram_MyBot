@@ -17,10 +17,10 @@ public class FilterCommand : TelegramBotCommands
 	{
 		var settings = SettingsFactory.TryGet(message.Chat.Id);
 		await settings.AddFilter(message).ConfigureAwait(false);
-		await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
+		await MessageSenderAndDeleter.DoMess(message,
 		botClient,
 		cancelationToken,
-		text: $"The welcome message has been successfully changed");
+		text: $"The filter \"{message.Text.Split()[1]}\" has been added");
 	}
 }
 

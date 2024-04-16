@@ -21,7 +21,7 @@ public class SetWelcomeCommand : TelegramBotCommands
     {
         var settings = SettingsFactory.TryGet(message.Chat.Id);
         await settings.SetWelcome(message);
-        await MessageSenderAndDeleter.SendMessageAndDeleteAsync(message,
+        await MessageSenderAndDeleter.DoMess(message,
         botClient,
         cancelationToken,
         text: $"The welcome message has been successfullly changed");

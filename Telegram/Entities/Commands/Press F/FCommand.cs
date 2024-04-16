@@ -30,7 +30,7 @@ public class FCommand : TelegramBotCommands
 			sticker: GetRandomSticker(),
 			cancellationToken: CancellationToken
 			);
-		await Task.Delay(15);
+		await Task.Delay(100);
 
 		await botClient.DeleteMessageAsync(
 			chatId: ChatId,
