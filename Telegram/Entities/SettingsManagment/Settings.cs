@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Telegram.Bot.Types;
-using Telegramchiik.Greeting;
+using Telegramchik.Greeting;
 using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
 using Telegramchik.Commands.Goodbye;
@@ -30,7 +30,7 @@ public class Settings
         {
             if (!Filters_Dict.TryRemove(message.Text.Split()[1], out var val))
             {
-                throw new TelegramExeption("Filters doesn`t contains such a keyword", message);
+                throw new TelegramExeption("Filters doesn`t contains such a keyword");
             }
         });
     }

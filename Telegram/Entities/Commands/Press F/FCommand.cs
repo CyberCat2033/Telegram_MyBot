@@ -16,14 +16,14 @@ public class FCommand : TelegramBotCommands
 
 	public FCommand(string Command, string Description) : base(Command, Description) { }
 
-	private InputFileId RandomSticker => InputFile.FromFileId(Stcikers_IDs[Get()]);
+	private InputFileId RandomSticker => InputFile.FromFileId(Stcikers_IDs[TelegramHelper.Get(Stcikers_IDs.Length)]);
 
-	private int Get()
-	{
-		var tm_indexer = new Random().Next(0, Stcikers_IDs.Length);
-		indexer = indexer == tm_indexer ? (tm_indexer + 1) % Stcikers_IDs.Length - 1 : tm_indexer;
-		return indexer;
-	}
+	// private int Get()
+	// {
+	// 	var tm_indexer = new Random().Next(0, Stcikers_IDs.Length);
+	// 	indexer = indexer == tm_indexer ? (tm_indexer + 1) % Stcikers_IDs.Length - 1 : tm_indexer;
+	// 	return indexer;
+	// }
 
 	public override async Task ExecuteAsync(Message message, ITelegramBotClient botClient, CancellationToken CancellationToken)
 	{
