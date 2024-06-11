@@ -5,7 +5,9 @@ namespace Telegramchik.Commands.Filters;
 
 public class Filter : MessageHandler
 {
+  //Activation word
 	public string Name { get; private set; }
+
 
 	public Filter(Message message) : base(message)
 	{
