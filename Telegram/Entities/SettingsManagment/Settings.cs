@@ -5,6 +5,7 @@ using Telegramchik.Commands;
 using Telegramchik.Commands.Filters;
 using Telegramchik.Commands.Goodbye;
 
+
 namespace Telegramchik.SettingsManagment;
 
 public class Settings
@@ -12,6 +13,7 @@ public class Settings
     private ConcurrentDictionary<string, Filter> Filters_Dict = new();
     private WelcomeMessage welcomeMessage = new();
     private GoodbyeMessage goodbyeMessage = new();
+    private string[] messageTextArray;
 
     #region Filters
 
@@ -26,9 +28,14 @@ public class Settings
 
     public async Task RemoveFilter(Message message)
     {
+       
         await Task.Run(() =>
         {
-            if (!Filters_Dict.TryRemove(message.Text.Split()[1], out var val))
+            if ( (messageTextArray = message.Text.Split()).Length < 2)
+            {
+                throw new TelegramExeption("Please type keyword of filter after command");
+            }
+            if (!Filters_Dict.TryRemove(messageTextArray[1], out var val))
             {
                 throw new TelegramExeption("Filters doesn`t contains such a keyword");
             }

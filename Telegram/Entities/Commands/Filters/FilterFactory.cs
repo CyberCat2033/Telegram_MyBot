@@ -12,7 +12,7 @@ public class FilterFactory
         Filter filter = new(message);
         await Task.Run(() =>
         {
-            Filters_Dict[filter.Name] = filter;
+            Filters_Dict[filter.Name.ToLower()] = filter;
         });
     }
 
