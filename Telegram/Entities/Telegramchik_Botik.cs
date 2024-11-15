@@ -37,7 +37,6 @@ public class Telegramchik_Botik
             ThrowPendingUpdates = true,
         };
 
-
         CommandDict = new()
         {
             ["/f"] = new FCommand("/f", "Press F"),
@@ -49,6 +48,7 @@ public class Telegramchik_Botik
         };
     }
     #endregion
+
 
     #region Public Methods
     public async Task Start()
@@ -101,6 +101,16 @@ public class Telegramchik_Botik
     {
         var message = update.Message;
         var chatId = message.Chat.Id;
+        if (!SettingsFactory.Contains(chatId) && message.Text != "/start")
+        {
+            await botClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: "Pleease start bot before using it",
+                replyToMessageId: message.MessageId,
+                cancellationToken: token
+            );
+            return;
+        }
         if (Conditions.WelcomeCondition(update))
         {
             try
@@ -142,7 +152,7 @@ public class Telegramchik_Botik
             return;
         if (message.Text is not { } messageText)
             return;
- 
+
         if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
         {
             if (CommandDict.TryGetValue(messageText.ToLower().Split()[0], out var telegramCommands))
@@ -166,18 +176,47 @@ public class Telegramchik_Botik
         {
             try
             {
-                await MessageParser.Parse(message,botClient,token);
+                await MessageParser.Parse(message, botClient, token);
             }
             catch (Exception exc)
+            {
+                await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: exc.Message,
+                    replyToMessageId: message.MessageId,
+                    cancellationToken: token
+                );
+            }
+            try
+            {
+                if (message.Type == MessageType.Text && messageText.ToLower()[0] == '/')
                 {
-                    await botClient.SendTextMessageAsync(
-                        chatId: chatId,
-                        text: exc.Message,
-                        replyToMessageId: message.MessageId,
-                        cancellationToken: token
-                    );
+                    if (
+                        CommandDict.TryGetValue(
+                            messageText.ToLower().Split()[0],
+                            out var telegramCommands
+                        )
+                    )
+                    {
+                        await telegramCommands.ExecuteAsync(message, client, token);
+                    }
                 }
+                else
+                {
+                    await MessageParser.Parse(message, botClient, token);
+                }
+            }
+            catch (Exception exc)
+            {
+                await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: exc.Message,
+                    replyToMessageId: message.MessageId,
+                    cancellationToken: token
+                );
+            }
         }
     }
+
     #endregion
 }

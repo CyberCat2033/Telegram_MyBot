@@ -3,6 +3,7 @@
 public static class TelegramHelper
 {
 	private static int Rnd_Index;
+
 	public static int Get(int max, int min = 0)
 	{
 		int temp_index = new Random().Next(min, max);
